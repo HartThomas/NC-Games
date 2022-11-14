@@ -1,8 +1,13 @@
-const { selectCategories } = require("./model");
+const { selectCategories, selectReviews } = require("./model");
 
 exports.getCategories = (req, res, next) => {
   selectCategories().then((categories) => {
-    console.log(categories);
     res.status(200).send({ categories });
+  });
+};
+
+exports.getReviews = (req, res, next) => {
+  selectReviews().then((reviews) => {
+    res.status(200).send({ reviews });
   });
 };
