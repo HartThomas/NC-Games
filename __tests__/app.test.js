@@ -17,7 +17,6 @@ describe("GET /api/categories", () => {
       .expect(200)
       .then(({ body }) => {
         const { categories } = body;
-        console.log(categories);
         expect(categories).toBeInstanceOf(Array);
         body.categories.forEach((category) => {
           expect(category).toEqual(
