@@ -75,3 +75,42 @@ describe("ERROR / typo or unknown path", () => {
       });
   });
 });
+
+describe("GET /api/reviews/:review_id", () => {
+  test("status - 200, returns one review object", () => {
+    return request(app)
+      .get("/api/reviews/4")
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.review).toEqual(
+          expect.objectContaining({
+            owner: expect.any(String),
+            title: expect.any(String),
+            review_id: 4,
+            category: expect.any(String),
+            review_img_url: expect.any(String),
+            created_at: expect.any(String),
+            votes: expect.any(Number),
+            designer: expect.any(String),
+            review_body: expect.any(String),
+          })
+        );
+      });
+  });
+  test("status - 400, invalid id", () => {
+    return request(app)
+      .get("/api/reviews/notAnId")
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Invalid ID");
+      });
+  });
+  test("status - 404, no review with that ID", () => {
+    return request(app)
+      .get("/api/reviews/9001")
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Review not found");
+      });
+  });
+});

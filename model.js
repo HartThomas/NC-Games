@@ -15,3 +15,17 @@ exports.selectReviews = () => {
       return data.rows;
     });
 };
+
+exports.selectReviewByReviewId = (id) => {
+  return db
+    .query(
+      "SELECT users.username AS owner, title, reviews.review_id, category, review_img_url, reviews.created_at, reviews.votes, designer, review_body FROM reviews JOIN users ON reviews.owner = users.username WHERE review_id = $1;",
+      [id]
+    )
+    .then((data) => {
+      if (data.rows.length === 0) {
+        return Promise.reject({ status: 404, msg: "Review not found" });
+      }
+      return data.rows[0];
+    });
+};
