@@ -86,7 +86,7 @@ describe("GET /api/reviews/:review_id", () => {
           expect.objectContaining({
             owner: expect.any(String),
             title: expect.any(String),
-            review_id: expect.any(Number),
+            review_id: 4,
             category: expect.any(String),
             review_img_url: expect.any(String),
             created_at: expect.any(String),
