@@ -29,3 +29,17 @@ exports.selectReviewByReviewId = (id) => {
       return data.rows[0];
     });
 };
+
+exports.selectCommentByReviewId = (id) => {
+  return db
+    .query(
+      "SELECT users.username AS author, comment_id, votes, created_at, body, review_id FROM comments JOIN users ON users.username = comments.author WHERE comments.review_id = $1 ORDER BY created_at;",
+      [id]
+    )
+    .then((data) => {
+      if (data.rows.length === 0) {
+        return Promise.reject({ status: 404, msg: "Review not found" });
+      }
+      return data.rows;
+    });
+};
