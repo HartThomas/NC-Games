@@ -55,6 +55,14 @@ describe("GET /api/reviews", () => {
         });
       });
   });
+  test("status -200, the reviews are sorted in descending order", () => {
+    return request(app)
+      .get("/api/reviews")
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.reviews).toBeSortedBy("created_at", { descending: true });
+      });
+  });
 });
 
 describe("ERROR / typo or unknown path", () => {
