@@ -114,3 +114,51 @@ describe("GET /api/reviews/:review_id", () => {
       });
   });
 });
+
+describe("GET /api/reviews/:review_id/comments", () => {
+  test("status - 200, an array of comments for the given review id", () => {
+    return request(app)
+      .get("/api/reviews/2/comments")
+      .expect(200)
+      .then(({ body }) => {
+        const { comments } = body;
+        expect(comments).toBeInstanceOf(Array);
+        body.comments.forEach((comment) => {
+          expect(comment).toEqual(
+            expect.objectContaining({
+              author: expect.any(String),
+              comment_id: expect.any(Number),
+              review_id: 2,
+              created_at: expect.any(String),
+              votes: expect.any(Number),
+              body: expect.any(String),
+            })
+          );
+        });
+      });
+  });
+  test("status -200, the reviews are sorted as the most recent first", () => {
+    return request(app)
+      .get("/api/reviews/2/comments")
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.comments).toBeSortedBy("created_at");
+      });
+  });
+  test("status - 404, if given an invalid id", () => {
+    return request(app)
+      .get("/api/reviews/9001/comments")
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Review not found");
+      });
+  });
+  test("status - 400, invalid id", () => {
+    return request(app)
+      .get("/api/reviews/notAnId/comments")
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Invalid ID");
+      });
+  });
+});

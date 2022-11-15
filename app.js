@@ -3,6 +3,7 @@ const {
   getCategories,
   getReviews,
   getReviewByReviewId,
+  getCommentsByReviewId,
 } = require("./controller");
 
 const app = express();
@@ -10,6 +11,7 @@ const app = express();
 app.get("/api/categories", getCategories);
 app.get("/api/reviews", getReviews);
 app.get("/api/reviews/:review_id", getReviewByReviewId);
+app.get("/api/reviews/:review_id/comments", getCommentsByReviewId);
 
 app.all("/*", (req, res) => {
   res.status(404).send({ msg: "Route not found" });
