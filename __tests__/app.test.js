@@ -162,3 +162,37 @@ describe("GET /api/reviews/:review_id/comments", () => {
       });
   });
 });
+
+describe.only("POST /api/reviews/:review_id/comments", () => {
+  test("status - 201, posts comment and sends it back", () => {
+    const newComment = {
+      username: "dav3rid",
+      body: "Farmyard fun doesnt even scratch the surface. I have spent many hours toiling over decisions in this game. Such as should I eat my cow now or try and nab an extra cow next turn and get them to breed, but what if Tash wants cows next turn?! She will be going first after all. Hmm maybe I should just take the starting player token off her, she has had it for about 1 turn which is far too long if you ask me.",
+    };
+    return request(app)
+      .post("/api/reviews/1/comments")
+      .send(newComment)
+      .expect(201)
+      .then(({ body }) => {
+        expect(body.comment).toEqual({ ...newComment });
+      });
+  });
+  test("status - 400, missing required fields", () => {
+    return request(app)
+      .post("/api/reviews/2/comments")
+      .send({})
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Missing required field/s");
+      });
+  });
+  test("status - 400, failing schema validation", () => {
+    return request(app)
+      .post("/api/reviews/2/comments")
+      .send({ username: "notAUsername", body: "I concur" })
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Username unknown");
+      });
+  });
+});
