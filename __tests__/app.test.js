@@ -102,7 +102,7 @@ describe("GET /api/reviews/:review_id", () => {
       .get("/api/reviews/notAnId")
       .expect(400)
       .then(({ body }) => {
-        expect(body.msg).toBe("Invalid ID");
+        expect(body.msg).toBe("Invalid input type");
       });
   });
   test("status - 404, no review with that ID", () => {
@@ -158,7 +158,7 @@ describe("GET /api/reviews/:review_id/comments", () => {
       .get("/api/reviews/notAnId/comments")
       .expect(400)
       .then(({ body }) => {
-        expect(body.msg).toBe("Invalid ID");
+        expect(body.msg).toBe("Invalid input type");
       });
   });
 });
@@ -199,6 +199,58 @@ describe("POST /api/reviews/:review_id/comments", () => {
     return request(app)
       .post("/api/reviews/9001/comments")
       .send(newComment)
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Review not found");
+      });
+  });
+});
+
+describe("PATCH /api/reviews/:review_id", () => {
+  const voteChange = { inc_votes: 9001 };
+  test("returns the updated review", () => {
+    return request(app)
+      .patch("/api/reviews/1")
+      .send(voteChange)
+      .expect(201)
+      .then(({ body }) => {
+        expect(body.review).toEqual(
+          expect.objectContaining({
+            owner: expect.any(String),
+            title: expect.any(String),
+            review_id: 1,
+            category: expect.any(String),
+            review_img_url: expect.any(String),
+            created_at: expect.any(String),
+            votes: 9002,
+            designer: expect.any(String),
+            review_body: expect.any(String),
+          })
+        );
+      });
+  });
+  test("status - 400, missing required fields", () => {
+    return request(app)
+      .patch("/api/reviews/2")
+      .send({})
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Missing required field/s");
+      });
+  });
+  test("status - 400, failing schema validation", () => {
+    return request(app)
+      .patch("/api/reviews/2")
+      .send({ inc_votes: "notAVote" })
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Invalid input type");
+      });
+  });
+  test("status - 404, if given an invalid id", () => {
+    return request(app)
+      .patch("/api/reviews/9001")
+      .send(voteChange)
       .expect(404)
       .then(({ body }) => {
         expect(body.msg).toBe("Review not found");
