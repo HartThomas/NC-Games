@@ -163,12 +163,12 @@ describe("GET /api/reviews/:review_id/comments", () => {
   });
 });
 
-describe.only("POST /api/reviews/:review_id/comments", () => {
+describe("POST /api/reviews/:review_id/comments", () => {
+  const newComment = {
+    username: "dav3rid",
+    body: "Farmyard fun doesnt even scratch the surface. I have spent many hours toiling over decisions in this game. Such as should I eat my cow now or try and nab an extra cow next turn and get them to breed, but what if Tash wants cows next turn?! She will be going first after all. Hmm maybe I should just take the starting player token off her, she has had it for about 1 turn which is far too long if you ask me.",
+  };
   test("status - 201, posts comment and sends it back", () => {
-    const newComment = {
-      username: "dav3rid",
-      body: "Farmyard fun doesnt even scratch the surface. I have spent many hours toiling over decisions in this game. Such as should I eat my cow now or try and nab an extra cow next turn and get them to breed, but what if Tash wants cows next turn?! She will be going first after all. Hmm maybe I should just take the starting player token off her, she has had it for about 1 turn which is far too long if you ask me.",
-    };
     return request(app)
       .post("/api/reviews/1/comments")
       .send(newComment)
@@ -192,7 +192,16 @@ describe.only("POST /api/reviews/:review_id/comments", () => {
       .send({ username: "notAUsername", body: "I concur" })
       .expect(400)
       .then(({ body }) => {
-        expect(body.msg).toBe("Username unknown");
+        expect(body.msg).toBe("Failing schema validation");
+      });
+  });
+  test("status - 404, if given an invalid id", () => {
+    return request(app)
+      .post("/api/reviews/9001/comments")
+      .send(newComment)
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Review not found");
       });
   });
 });

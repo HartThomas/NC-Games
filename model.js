@@ -1,4 +1,5 @@
 const db = require("./db");
+const { checkIfReviewExists } = require("./utils");
 
 exports.selectCategories = () => {
   return db.query("SELECT slug, description FROM categories;").then((data) => {
@@ -45,16 +46,22 @@ exports.selectCommentByReviewId = (id) => {
 };
 
 exports.insertCommentOnReview = (id, body) => {
-  if (!body.body || !body.username) {
-    return Promise.reject({ status: 400, msg: "Missing required field/s" });
-  } else {
-    return db
-      .query(
-        "INSERT INTO comments (author, body, review_id) VALUES ($1, $2, $3) RETURNING author AS username, body;",
-        [body.username, body.body, id]
-      )
-      .then((data) => {
-        return data.rows[0];
-      });
-  }
+  return checkIfReviewExists(id).then((doesReviewExist) => {
+    if (doesReviewExist === false) {
+      return Promise.reject({ status: 404, msg: "Review not found" });
+    } else {
+      if (!body.body || !body.username) {
+        return Promise.reject({ status: 400, msg: "Missing required field/s" });
+      } else {
+        return db
+          .query(
+            "INSERT INTO comments (author, body, review_id) VALUES ($1, $2, $3) RETURNING author AS username, body;",
+            [body.username, body.body, id]
+          )
+          .then((data) => {
+            return data.rows[0];
+          });
+      }
+    }
+  });
 };
