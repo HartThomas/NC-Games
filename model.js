@@ -12,7 +12,6 @@ exports.selectReviews = (
   sort_by = "created_at",
   order = "DESC"
 ) => {
-  console.log(category, order, sort_by);
   const validDirections = ["ASC", "asc", "desc", "DESC"];
   const validColumns = [
     "owner",
@@ -50,7 +49,6 @@ exports.selectReviews = (
   }
 
   queryStr += ` GROUP BY reviews.review_id, users.username ORDER BY ${sort_by} ${order.toUpperCase()};`;
-  console.log(queryStr);
   return db.query(queryStr).then((data) => {
     return data.rows;
   });
