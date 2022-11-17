@@ -247,13 +247,22 @@ describe("PATCH /api/reviews/:review_id", () => {
         expect(body.msg).toBe("Invalid input type");
       });
   });
-  test("status - 404, if given an invalid id", () => {
+  test("status - 404, review not found", () => {
     return request(app)
       .patch("/api/reviews/9001")
       .send(voteChange)
       .expect(404)
       .then(({ body }) => {
         expect(body.msg).toBe("Review not found");
+      });
+  });
+  test("status - 400, invalid id", () => {
+    return request(app)
+      .patch("/api/reviews/notAnId")
+      .send(voteChange)
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Invalid id");
       });
   });
 });
