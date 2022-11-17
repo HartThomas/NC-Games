@@ -20,7 +20,7 @@ exports.selectReviews = () => {
 exports.selectReviewByReviewId = (id) => {
   return db
     .query(
-      "SELECT users.username AS owner, title, reviews.review_id, category, review_img_url, reviews.created_at, reviews.votes, designer, review_body FROM reviews JOIN users ON reviews.owner = users.username WHERE review_id = $1;",
+      "SELECT users.username, COUNT(comments.review_id)AS comment_count, reviews.review_body, reviews.owner, title, reviews.review_id, category, review_img_url, reviews.created_at, reviews.votes, designer FROM reviews JOIN users ON reviews.owner = users.username LEFT JOIN comments ON comments.review_id = reviews.review_id WHERE reviews.review_id = $1 GROUP BY reviews.review_id, users.username;",
       [id]
     )
     .then((data) => {
