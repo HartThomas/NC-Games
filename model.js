@@ -7,14 +7,53 @@ exports.selectCategories = () => {
   });
 };
 
-exports.selectReviews = () => {
-  return db
-    .query(
-      "SELECT users.username AS owner, COUNT(comments.review_id)AS comment_count, title, reviews.review_id, category, review_img_url, reviews.created_at, reviews.votes, designer FROM reviews JOIN users ON reviews.owner = users.username LEFT JOIN comments ON comments.review_id = reviews.review_id GROUP BY reviews.review_id, users.username ORDER BY created_at DESC;"
-    )
-    .then((data) => {
-      return data.rows;
-    });
+exports.selectReviews = (
+  category = "all",
+  sort_by = "created_at",
+  order = "DESC"
+) => {
+  console.log(category, order, sort_by);
+  const validDirections = ["ASC", "asc", "desc", "DESC"];
+  const validColumns = [
+    "owner",
+    "comment_count",
+    "title",
+    "review_id",
+    "category",
+    "review_img_url",
+    "created_at",
+    "votes",
+    "designer",
+  ];
+  const validCategories = [
+    "strategy",
+    "hidden-roles",
+    "dexterity",
+    "push-your-luck",
+    "roll-and-write",
+    "deck-building",
+    "engine-building",
+    "all",
+  ];
+  if (
+    !validColumns.includes(sort_by) ||
+    !validDirections.includes(order) ||
+    !validCategories.includes(category)
+  ) {
+    return Promise.reject({ status: 400, msg: "Invalid query" });
+  }
+  let queryStr =
+    "SELECT users.username AS owner, COUNT(comments.review_id)AS comment_count, title, reviews.review_id, category, review_img_url, reviews.created_at, reviews.votes, designer FROM reviews JOIN users ON reviews.owner = users.username LEFT JOIN comments ON comments.review_id = reviews.review_id";
+
+  if (category !== "all") {
+    queryStr += ` WHERE category = '${category}'`;
+  }
+
+  queryStr += ` GROUP BY reviews.review_id, users.username ORDER BY ${sort_by} ${order.toUpperCase()};`;
+  console.log(queryStr);
+  return db.query(queryStr).then((data) => {
+    return data.rows;
+  });
 };
 
 exports.selectReviewByReviewId = (id) => {

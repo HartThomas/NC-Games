@@ -63,6 +63,18 @@ describe("GET /api/reviews", () => {
         expect(body.reviews).toBeSortedBy("created_at", { descending: true });
       });
   });
+  test.only("status - 200, can select a category for the returned reviews", () => {
+    return request(app)
+      .get("/api/reviews?category=dexterity")
+      .expect(200)
+      .then(({ body }) => {
+        const { reviews } = body;
+        expect(reviews).toBeInstanceOf(Array);
+        body.reviews.forEach((review) => {
+          expect(review.category).toBe("dexterity");
+        });
+      });
+  });
 });
 
 describe("ERROR / typo or unknown path", () => {
