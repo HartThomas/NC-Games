@@ -93,6 +93,7 @@ describe("GET /api/reviews/:review_id", () => {
             votes: expect.any(Number),
             designer: expect.any(String),
             review_body: expect.any(String),
+            comment_count: expect.any(String),
           })
         );
       });
