@@ -71,7 +71,6 @@ exports.updateVotes = (id, body) => {
     if (doesReviewExist === false) {
       return Promise.reject({ status: 404, msg: "Review not found" });
     } else {
-      console.log(body);
       if (!body.inc_votes) {
         return Promise.reject({ status: 400, msg: "Missing required field/s" });
       } else {
@@ -86,4 +85,12 @@ exports.updateVotes = (id, body) => {
       }
     }
   });
+};
+
+exports.selectUsers = () => {
+  return db
+    .query("SELECT username, name, avatar_url FROM users;")
+    .then((data) => {
+      return data.rows;
+    });
 };

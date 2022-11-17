@@ -5,6 +5,7 @@ const {
   selectCommentByReviewId,
   insertCommentOnReview,
   updateVotes,
+  selectUsers,
 } = require("./model");
 
 exports.getCategories = (req, res, next) => {
@@ -63,4 +64,10 @@ exports.patchVotes = (req, res, next) => {
     .catch((err) => {
       next(err);
     });
+};
+
+exports.getUsers = (req, res, next) => {
+  selectUsers().then((users) => {
+    res.status(200).send({ users });
+  });
 };
