@@ -65,3 +65,24 @@ exports.insertCommentOnReview = (id, body) => {
     }
   });
 };
+
+exports.updateVotes = (id, body) => {
+  return checkIfReviewExists(id).then((doesReviewExist) => {
+    if (doesReviewExist === false) {
+      return Promise.reject({ status: 404, msg: "Review not found" });
+    } else {
+      if (!body.inc_votes) {
+        return Promise.reject({ status: 400, msg: "Missing required field/s" });
+      } else {
+        return db
+          .query(
+            "UPDATE reviews SET votes = $1 + votes WHERE review_id = $2 RETURNING *",
+            [body.inc_votes, id]
+          )
+          .then((data) => {
+            return data.rows[0];
+          });
+      }
+    }
+  });
+};
