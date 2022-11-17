@@ -93,6 +93,7 @@ describe("GET /api/reviews/:review_id", () => {
             votes: expect.any(Number),
             designer: expect.any(String),
             review_body: expect.any(String),
+            comment_count: expect.any(String),
           })
         );
       });
@@ -267,7 +268,7 @@ describe("PATCH /api/reviews/:review_id", () => {
   });
 });
 
-describe.only("GET /api/users", () => {
+describe("GET /api/users", () => {
   test("status 200, returns array of user objects", () => {
     return request(app)
       .get("/api/users")
