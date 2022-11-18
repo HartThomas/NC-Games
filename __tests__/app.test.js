@@ -161,6 +161,7 @@ describe("GET /api/reviews/:review_id", () => {
       .get("/api/reviews/4")
       .expect(200)
       .then(({ body }) => {
+        console.log(body.review);
         expect(body.review).toEqual(
           expect.objectContaining({
             owner: expect.any(String),
@@ -368,7 +369,7 @@ describe("GET /api/users", () => {
   });
 });
 
-describe("DELETE /api/comments/:comment_id", () => {
+describe.only("DELETE /api/comments/:comment_id", () => {
   test("status - 204, should delete comment", () => {
     return request(app).delete("/api/comment/1").expect(204);
   });

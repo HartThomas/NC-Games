@@ -15,18 +15,3 @@ exports.checkIfReviewExists = (id) => {
     });
   }
 };
-
-exports.checkIfCommentExists = (id) => {
-  if (isNaN(id)) {
-    return Promise.reject({ status: 400, msg: "Invalid id" });
-  } else {
-    return db.query("SELECT * FROM comments").then((data) => {
-      const filteredArray = data.rows.filter((comment) => {
-        return comment.comment_id === +id;
-      });
-      if (filteredArray.length > 0) {
-        return true;
-      } else return false;
-    });
-  }
-};

@@ -133,15 +133,15 @@ exports.selectUsers = () => {
 };
 
 exports.deleteCommentByCommentId = (id) => {
-  return checkIfCommentExists(id).then((doesCommentExist) => {
-    if (doesCommentExist === false) {
-      return Promise.reject({ status: 404, msg: "Comment not found" });
-    } else {
-      return db
-        .query("DELETE FROM comments WHERE comment_id = $1", [id])
-        .then(() => {
-          return;
-        });
-    }
-  });
+  if (isNaN(id)) {
+    return Promise.reject({ status: 400, msg: "Invalid id" });
+  } else {
+    return db
+      .query("DELETE FROM comments WHERE comment_id = $1 RETURNING *;", [id])
+      .then((data) => {
+        if (data.rowCount < 1) {
+          return Promise.reject({ status: 404, msg: "Comment not found" });
+        } else return;
+      });
+  }
 };
