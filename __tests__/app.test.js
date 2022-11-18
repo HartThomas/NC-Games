@@ -203,6 +203,7 @@ describe("GET /api/reviews/:review_id/comments", () => {
       .expect(200)
       .then(({ body }) => {
         const { comments } = body;
+        console.log(body.comments);
         expect(comments).toBeInstanceOf(Array);
         body.comments.forEach((comment) => {
           expect(comment).toEqual(
@@ -387,6 +388,18 @@ describe("DELETE /api/comments/:comment_id", () => {
       .expect(400)
       .then(({ body }) => {
         expect(body.msg).toBe("Invalid id");
+      });
+  });
+});
+
+describe("GET /api", () => {
+  test("status 200, returns a json with all endpoints explained", () => {
+    return request(app)
+      .get("/api")
+      .expect(200)
+      .then(({ body }) => {
+        const { endpoints } = body;
+        expect(JSON.parse(endpoints)).toBeInstanceOf(Object);
       });
   });
 });

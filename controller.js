@@ -7,6 +7,7 @@ const {
   updateVotes,
   selectUsers,
   deleteCommentByCommentId,
+  readFileEndPoints,
 } = require("./model");
 
 exports.getCategories = (req, res, next) => {
@@ -87,6 +88,17 @@ exports.deleteComment = (req, res, next) => {
       res.status(204).send();
     })
     .catch((err) => {
+      next(err);
+    });
+};
+
+exports.getEndpoints = (req, res, next) => {
+  readFileEndPoints()
+    .then((endpoints) => {
+      res.status(200).send({ endpoints });
+    })
+    .catch((err) => {
+      console.log(err);
       next(err);
     });
 };
