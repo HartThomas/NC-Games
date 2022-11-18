@@ -8,6 +8,7 @@ const {
   patchVotes,
   getUsers,
   deleteComment,
+  getEndpoints,
 } = require("./controller");
 
 const app = express();
@@ -18,6 +19,7 @@ app.get("/api/reviews", getReviews);
 app.get("/api/reviews/:review_id", getReviewByReviewId);
 app.get("/api/reviews/:review_id/comments", getCommentsByReviewId);
 app.get("/api/users", getUsers);
+app.get("/api", getEndpoints);
 
 app.post("/api/reviews/:review_id/comments", postCommentOnReview);
 

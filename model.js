@@ -1,5 +1,6 @@
 const db = require("./db");
-const { checkIfReviewExists, checkIfCommentExists } = require("./utils");
+const { checkIfReviewExists } = require("./utils");
+const { readFile } = require("fs.promises");
 
 exports.selectCategories = () => {
   return db.query("SELECT slug, description FROM categories;").then((data) => {
@@ -144,4 +145,10 @@ exports.deleteCommentByCommentId = (id) => {
         } else return;
       });
   }
+};
+
+exports.readFileEndPoints = () => {
+  return readFile("./endpoints.json", "utf8").then((data) => {
+    return data;
+  });
 };

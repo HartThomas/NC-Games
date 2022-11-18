@@ -30,5 +30,72 @@
         }
       ]
     }
+  },
+  "GET /api/reviews/:review_id": {
+    "description": "serves an object of the review with the review_id specified",
+    "queries": [],
+    "exampleResponse": {
+      "username": "mallionaire",
+      "comment_count": "0",
+      "review_body": "Consequat velit occaecat voluptate do. Dolor pariatur fugiat sint et proident ex do consequat est. Nisi minim laboris mollit cupidatat et adipisicing laborum do. Sint sit tempor officia pariatur duis ullamco labore ipsum nisi voluptate nulla eu veniam. Et do ad id dolore id cillum non non culpa. Cillum mollit dolor dolore excepteur aliquip. Cillum aliquip quis aute enim anim ex laborum officia. Aliqua magna elit reprehenderit Lorem elit non laboris irure qui aliquip ad proident. Qui enim mollit Lorem labore eiusmod",
+      "owner": "mallionaire",
+      "title": "Dolor reprehenderit",
+      "review_id": 4,
+      "category": "social deduction",
+      "review_img_url": "https://images.pexels.com/photos/278918/pexels-photo-278918.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260",
+      "created_at": "2021-01-22T11:35:50.936Z",
+      "votes": "7",
+      "designer": "Gamey McGameface"
+    }
+  },
+  "GET /api/reviews/:review_id/comments": {
+    "description": "serves all comments on a specific review_id",
+    "queries": [],
+    "exampleResponse": [
+      {
+        "author": "bainesface",
+        "comment_id": 4,
+        "votes": 16,
+        "created_at": "2017-11-22T12:36:03.389Z",
+        "body": "EPIC board game!",
+        "review_id": 2
+      }
+    ]
+  },
+  "POST /api/reviews/:review_id/comments": {
+    "description": "can be sent a comment object and will serve it back to show it has been inserted into the database",
+    "queries": [],
+    "exampleResponse": {
+      "username": "dav3rid",
+      "body": "Farmyard fun doesnt even scratch the surface. I have spent many hours toiling over decisions in this game. Such as should I eat my cow now or try and nab an extra cow next turn and get them to breed, but what if Tash wants cows next turn?! She will be going first after all. Hmm maybe I should just take the starting player token off her, she has had it for about 1 turn which is far too long if you ask me."
+    }
+  },
+  "PATCH /api/reviews/review_id": {
+    "description": "increment or decrement the votes on a specific review and serves you the review back",
+    "queries": [],
+    "exampleResponse": {
+      "author": "bainesface",
+      "comment_id": 4,
+      "votes": 16,
+      "created_at": "2017-11-22T12:36:03.389Z",
+      "body": "EPIC board game!",
+      "review_id": 9002
+    }
+  },
+  "Get /api/users": {
+    "description": "serves an array of all users",
+    "queries": [],
+    "exampleResponse": [
+      {
+        "username": "philippaclaire9",
+        "name": "philippa",
+        "avatar_url": "https://avatars2.githubusercontent.com/u/24604688?s=460&v=4"
+      }
+    ]
+  },
+  "DELETE /api/comment/:comment_id": {
+    "description": "removes a comment from the database",
+    "queries": [],
+    "exampleResponse": "status: 204"
   }
 }
