@@ -75,6 +75,30 @@ describe("GET /api/reviews", () => {
         });
       });
   });
+  test("status - 200, sorts by selected direction", () => {
+    return request(app)
+      .get("/api/reviews?order=asc")
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.reviews).toBeSortedBy("created_at", { descending: false });
+      });
+  });
+  test("status - 200, sorts by selected column", () => {
+    return request(app)
+      .get("/api/reviews?sort_by=votes&order=asc")
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.reviews).toBeSortedBy("votes");
+      });
+  });
+  test("status - 400, invalid query", () => {
+    return request(app)
+      .get("/api/reviews?sort_by=notAColumn")
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Invalid query");
+      });
+  });
 });
 
 describe("ERROR / typo or unknown path", () => {
