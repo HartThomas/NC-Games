@@ -63,6 +63,85 @@ describe("GET /api/reviews", () => {
         expect(body.reviews).toBeSortedBy("created_at", { descending: true });
       });
   });
+  test("status - 200, can select a category for the returned reviews", () => {
+    return request(app)
+      .get("/api/reviews?category=dexterity")
+      .expect(200)
+      .then(({ body }) => {
+        const { reviews } = body;
+        expect(reviews).toBeInstanceOf(Array);
+        body.reviews.forEach((review) => {
+          expect(review.category).toBe("dexterity");
+        });
+      });
+  });
+  test("status - 200, sorts by selected direction", () => {
+    return request(app)
+      .get("/api/reviews?order=asc")
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.reviews).toBeSortedBy("created_at", { descending: false });
+      });
+  });
+  test("status - 200, sorts by selected column", () => {
+    return request(app)
+      .get("/api/reviews?sort_by=votes&order=asc")
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.reviews).toBeSortedBy("votes");
+      });
+  });
+  test("status - 400, invalid column query", () => {
+    return request(app)
+      .get("/api/reviews?sort_by=notAColumn")
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Invalid query");
+      });
+  });
+  test("status - 400, invalid category query", () => {
+    return request(app)
+      .get("/api/reviews?category=notACategory")
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Invalid query");
+      });
+  });
+  test("status - 400, invalid order query", () => {
+    return request(app)
+      .get("/api/reviews?order=notAnOrder")
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Invalid query");
+      });
+  });
+  test("status - 200, all 3 queries work together", () => {
+    return request(app)
+      .get("/api/reviews?category=strategy&order=desc&sort_by=comment_count")
+      .expect(200)
+      .then(({ body }) => {
+        const { reviews } = body;
+        expect(reviews).toBeInstanceOf(Array);
+        expect(body.reviews).toBeSortedBy("comment_count", {
+          descending: true,
+        });
+        body.reviews.forEach((review) => {
+          expect(review).toEqual(
+            expect.objectContaining({
+              owner: expect.any(String),
+              title: expect.any(String),
+              review_id: expect.any(Number),
+              category: "strategy",
+              review_img_url: expect.any(String),
+              created_at: expect.any(String),
+              votes: expect.any(Number),
+              designer: expect.any(String),
+              comment_count: expect.any(String),
+            })
+          );
+        });
+      });
+  });
 });
 
 describe("ERROR / typo or unknown path", () => {

@@ -15,9 +15,16 @@ exports.getCategories = (req, res, next) => {
 };
 
 exports.getReviews = (req, res, next) => {
-  selectReviews().then((reviews) => {
-    res.status(200).send({ reviews });
-  });
+  const category = req.query.category;
+  const sort_by = req.query.sort_by;
+  const order = req.query.order;
+  selectReviews(category, sort_by, order)
+    .then((reviews) => {
+      res.status(200).send({ reviews });
+    })
+    .catch((err) => {
+      next(err);
+    });
 };
 
 exports.getReviewByReviewId = (req, res, next) => {
