@@ -1,5 +1,5 @@
 const db = require("./db");
-const { checkIfReviewExists } = require("./utils");
+const { checkIfReviewExists, checkIfCommentExists } = require("./utils");
 
 exports.selectCategories = () => {
   return db.query("SELECT slug, description FROM categories;").then((data) => {
@@ -130,4 +130,18 @@ exports.selectUsers = () => {
     .then((data) => {
       return data.rows;
     });
+};
+
+exports.deleteCommentByCommentId = (id) => {
+  if (isNaN(id)) {
+    return Promise.reject({ status: 400, msg: "Invalid id" });
+  } else {
+    return db
+      .query("DELETE FROM comments WHERE comment_id = $1 RETURNING *;", [id])
+      .then((data) => {
+        if (data.rowCount < 1) {
+          return Promise.reject({ status: 404, msg: "Comment not found" });
+        } else return;
+      });
+  }
 };

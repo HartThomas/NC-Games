@@ -161,6 +161,7 @@ describe("GET /api/reviews/:review_id", () => {
       .get("/api/reviews/4")
       .expect(200)
       .then(({ body }) => {
+        console.log(body.review);
         expect(body.review).toEqual(
           expect.objectContaining({
             owner: expect.any(String),
@@ -364,6 +365,28 @@ describe("GET /api/users", () => {
             })
           );
         });
+      });
+  });
+});
+
+describe("DELETE /api/comments/:comment_id", () => {
+  test("status - 204, should delete comment", () => {
+    return request(app).delete("/api/comment/1").expect(204);
+  });
+  test("status - 404, comment not found", () => {
+    return request(app)
+      .delete("/api/comment/9001")
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Comment not found");
+      });
+  });
+  test("status - 400, invalid id type", () => {
+    return request(app)
+      .delete("/api/comment/notAnId")
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Invalid id");
       });
   });
 });
