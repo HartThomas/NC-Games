@@ -6,6 +6,7 @@ const {
   insertCommentOnReview,
   updateVotes,
   selectUsers,
+  deleteCommentByCommentId,
 } = require("./model");
 
 exports.getCategories = (req, res, next) => {
@@ -77,4 +78,15 @@ exports.getUsers = (req, res, next) => {
   selectUsers().then((users) => {
     res.status(200).send({ users });
   });
+};
+
+exports.deleteComment = (req, res, next) => {
+  const id = req.params.comment_id;
+  deleteCommentByCommentId(id)
+    .then(() => {
+      res.status(204).send();
+    })
+    .catch((err) => {
+      next(err);
+    });
 };
