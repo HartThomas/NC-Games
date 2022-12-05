@@ -161,7 +161,6 @@ describe("GET /api/reviews/:review_id", () => {
       .get("/api/reviews/4")
       .expect(200)
       .then(({ body }) => {
-        console.log(body.review);
         expect(body.review).toEqual(
           expect.objectContaining({
             owner: expect.any(String),
@@ -203,7 +202,6 @@ describe("GET /api/reviews/:review_id/comments", () => {
       .expect(200)
       .then(({ body }) => {
         const { comments } = body;
-        console.log(body.comments);
         expect(comments).toBeInstanceOf(Array);
         body.comments.forEach((comment) => {
           expect(comment).toEqual(
@@ -398,8 +396,7 @@ describe("GET /api", () => {
       .get("/api")
       .expect(200)
       .then(({ body }) => {
-        const { endpoints } = body;
-        expect(JSON.parse(endpoints)).toBeInstanceOf(Object);
+        expect(body).toBeInstanceOf(Object);
       });
   });
 });
