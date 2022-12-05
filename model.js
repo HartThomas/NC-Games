@@ -148,7 +148,9 @@ exports.deleteCommentByCommentId = (id) => {
 };
 
 exports.readFileEndPoints = () => {
+  console.log("hello");
   return readFile("./endpoints.json", "utf8").then((data) => {
-    return data;
+    console.log(data);
+    return JSON.stringify(data);
   });
 };
