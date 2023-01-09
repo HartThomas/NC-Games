@@ -95,7 +95,6 @@ exports.deleteComment = (req, res, next) => {
 exports.getEndpoints = (req, res, next) => {
   readFileEndPoints()
     .then((endpoints) => {
-      console.log(JSON.parse(endpoints));
       res.status(200).send(JSON.parse(endpoints));
     })
     .catch((err) => {

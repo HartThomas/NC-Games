@@ -1,4 +1,14 @@
-Hi! Welcome to NC-Games.
+# NC-Games by Thomas Hart
+
+An API for the back end of a Northcoders board game site, where users can post reviews and comments and vote on them.
+
+It uses a PSQL database and is built with Express and hosted on Cyclic using ElephantSQL.
+
+## installation
+
+```
+$ npm install pg, express
+```
 
 ## setup
 
