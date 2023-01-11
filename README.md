@@ -9,6 +9,8 @@ The hosted version can be found here https://vast-pink-oyster-ring.cyclic.app/ap
 ## installation
 
 ```
+$ git clone https://github.com/HartThomas/NC-Games
+$ cd NC-Games
 $ npm install pg, express
 ```
 
